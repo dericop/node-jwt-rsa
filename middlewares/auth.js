@@ -1,13 +1,14 @@
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 
+const publicKey = fs.readFileSync('../rsa-sha256/jwtRS256.key.pub');
+
 module.exports = (req, res, next) => {
   const authHeader = req.header('Authorization');
   if (!authHeader) return res.status(401).send('Not authorized');
 
   const token = _.replace(authHeader, 'Bearer', '').trim();
   if (!token) return res.status(401).send('Not authorized');
-  const publicKey = fs.readFileSync('../rsa-sha256/jwtRS256.key.pub');
 
   try {
     const decoded = jwt.verify(token, publicKey, {
